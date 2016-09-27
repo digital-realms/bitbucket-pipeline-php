@@ -1,0 +1,16 @@
+image: digitalrealms/bitbucket-pipeline-php
+
+pipelines:
+  default:
+    - step:
+        script: 
+          - phantomjs --webdriver=4444 --ignore-ssl-errors=true &
+          - composer install
+          - npm install --silent
+          - ./node_modules/.bin/gulp 
+          - cp ci/.env.ci .env
+          - touch ci.sqlite
+          - export URL="http://localhost:8000"
+          - ./vendor/bin/phpunit
+          - ./node_modules/.bin/codeceptjs run
+          
